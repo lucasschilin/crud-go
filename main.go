@@ -1,11 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/lucasschilin/crud-go/src/controller/routes"
+)
+
+const (
+	GIN_MODE = gin.EnvGinMode
+	API_PORT = "API_PORT"
 )
 
 func main() {
@@ -14,5 +20,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(os.Getenv("TEST"))
+	gin.SetMode(os.Getenv(GIN_MODE))
+	router := gin.Default()
+
+	routes.InitRoutes(&router.RouterGroup)
+
+	if err := router.Run(":" + os.Getenv(API_PORT)); err != nil {
+		log.Fatal(err)
+	}
 }
