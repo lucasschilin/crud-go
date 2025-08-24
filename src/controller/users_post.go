@@ -2,22 +2,28 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lucasschilin/crud-go/src/configuration/rest_err"
 	"github.com/lucasschilin/crud-go/src/controller/model/request"
+	"github.com/lucasschilin/crud-go/src/controller/model/response"
 )
 
 func PostUser(c *gin.Context) {
 	var userRequest request.User
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
-		restErr := rest_err.NewBadRequestError(
-			fmt.Sprintf("there are some incorrect fields, error: %s", err.Error()),
-		)
+		fmt.Println(err.Error())
+		restErr := rest_err.NewBadRequestError("There are some incorrect fields")
 		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	fmt.Println(userRequest)
+	c.JSON(http.StatusOK, &response.User{
+		ID:    "000-000-000",
+		Email: userRequest.Email,
+		Name:  userRequest.Name,
+		Age:   userRequest.Age,
+	})
 }
