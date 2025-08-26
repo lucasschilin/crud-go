@@ -7,8 +7,12 @@ import (
 	"github.com/lucasschilin/crud-go/src/configuration/logger"
 	"github.com/lucasschilin/crud-go/src/configuration/validation"
 	"github.com/lucasschilin/crud-go/src/controller/model/request"
-	"github.com/lucasschilin/crud-go/src/controller/model/response"
+	"github.com/lucasschilin/crud-go/src/model"
 	"go.uber.org/zap"
+)
+
+var (
+	UserDomainInterface model.UserDomainInterface
 )
 
 func PostUser(c *gin.Context) {
@@ -24,11 +28,20 @@ func PostUser(c *gin.Context) {
 		return
 	}
 
+	domain := model.NewUserDomain(
+		userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+
+	err := domain.CreateUser()
+	if err != nil {
+		logger.Error("error trying to validate POST /users request", err, journeyTag)
+		c.JSON(err.Code, err)
+		return
+	}
+
 	logger.Info("user 000-000-000 created successfully", journeyTag)
-	c.JSON(http.StatusOK, &response.User{
-		ID:    "000-000-000",
-		Email: userRequest.Email,
-		Name:  userRequest.Name,
-		Age:   userRequest.Age,
-	})
+	c.JSON(http.StatusOK, domain)
 }
