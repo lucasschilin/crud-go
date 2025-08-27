@@ -8,6 +8,7 @@ import (
 	"github.com/lucasschilin/crud-go/src/configuration/validation"
 	"github.com/lucasschilin/crud-go/src/controller/model/request"
 	"github.com/lucasschilin/crud-go/src/model"
+	"github.com/lucasschilin/crud-go/src/model/service"
 	"go.uber.org/zap"
 )
 
@@ -35,7 +36,9 @@ func PostUser(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	err := domain.CreateUser()
+	service := service.NewUserDomainService()
+
+	err := service.CreateUser(domain)
 	if err != nil {
 		logger.Error("error trying to validate POST /users request", err, journeyTag)
 		c.JSON(err.Code, err)

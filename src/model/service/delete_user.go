@@ -1,4 +1,4 @@
-package model
+package service
 
 import (
 	"github.com/lucasschilin/crud-go/src/configuration/logger"
@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (ud *userDomain) DeleteUser() *rest_err.RestErr {
+func (ud *userDomainService) DeleteUser(string) *rest_err.RestErr {
 	logger.Info("Init deleteUser model", zap.String("journey", "delete-user"))
 
 	return nil
