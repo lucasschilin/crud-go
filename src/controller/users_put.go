@@ -2,4 +2,4 @@ package controller
 
 import "github.com/gin-gonic/gin"
 
-func PutUser(c *gin.Context) {}
+func (uc *userControllerInterface) PutUser(c *gin.Context) {}

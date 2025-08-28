@@ -7,7 +7,7 @@ import (
 	"github.com/lucasschilin/crud-go/src/controller/model/response"
 )
 
-func GetUser(c *gin.Context) {
+func (uc *userControllerInterface) GetUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response.User{
 		ID:    "6d5s4",

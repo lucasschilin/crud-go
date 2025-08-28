@@ -6,7 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/lucasschilin/crud-go/src/controller"
 	"github.com/lucasschilin/crud-go/src/controller/routes"
+	"github.com/lucasschilin/crud-go/src/model/service"
 )
 
 const (
@@ -20,10 +22,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	userService := service.NewUserDomainService()
+	userController := controller.NewUserControllerInterface(userService)
+
 	gin.SetMode(os.Getenv(GIN_MODE))
 	router := gin.Default()
 
-	routes.InitRoutes(&router.RouterGroup)
+	routes.InitRoutes(&router.RouterGroup, userController)
 
 	if err := router.Run(":" + os.Getenv(API_PORT)); err != nil {
 		log.Fatal(err)

@@ -8,7 +8,7 @@ import (
 	"github.com/lucasschilin/crud-go/src/configuration/validation"
 	"github.com/lucasschilin/crud-go/src/controller/model/request"
 	"github.com/lucasschilin/crud-go/src/model"
-	"github.com/lucasschilin/crud-go/src/model/service"
+	"github.com/lucasschilin/crud-go/src/view"
 	"go.uber.org/zap"
 )
 
@@ -16,7 +16,7 @@ var (
 	UserDomainInterface model.UserDomainInterface
 )
 
-func PostUser(c *gin.Context) {
+func (uc *userControllerInterface) PostUser(c *gin.Context) {
 	journeyTag := zap.String("journey", "create-user")
 
 	logger.Info("init PostUser() controller", journeyTag)
@@ -36,9 +36,7 @@ func PostUser(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	service := service.NewUserDomainService()
-
-	err := service.CreateUser(domain)
+	err := uc.service.CreateUser(domain)
 	if err != nil {
 		logger.Error("error trying to validate POST /users request", err, journeyTag)
 		c.JSON(err.Code, err)
@@ -46,5 +44,5 @@ func PostUser(c *gin.Context) {
 	}
 
 	logger.Info("user 000-000-000 created successfully", journeyTag)
-	c.JSON(http.StatusOK, domain)
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domain))
 }

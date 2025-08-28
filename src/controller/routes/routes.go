@@ -5,9 +5,13 @@ import (
 	"github.com/lucasschilin/crud-go/src/controller"
 )
 
-func InitRoutes(r *gin.RouterGroup) {
-	r.GET("/users/:id", controller.GetUser)
-	r.POST("/users", controller.PostUser)
-	r.PUT("/users/:id", controller.PutUser)
-	r.DELETE("/users/:id", controller.DeleteUser)
+func InitRoutes(
+	r *gin.RouterGroup,
+	userController controller.UserControllerInterface,
+) {
+
+	r.GET("/users/:id", userController.GetUser)
+	r.POST("/users", userController.PostUser)
+	r.PUT("/users/:id", userController.PutUser)
+	r.DELETE("/users/:id", userController.DeleteUser)
 }
