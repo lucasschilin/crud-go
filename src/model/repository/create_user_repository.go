@@ -7,6 +7,8 @@ import (
 	"github.com/lucasschilin/crud-go/src/configuration/logger"
 	"github.com/lucasschilin/crud-go/src/configuration/rest_err"
 	"github.com/lucasschilin/crud-go/src/model"
+	"github.com/lucasschilin/crud-go/src/model/repository/entity/converter"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 const (
@@ -21,17 +23,14 @@ func (ur *userRepository) CreateUser(
 
 	collection := ur.databaseConnection.Collection(os.Getenv(COLLECTION_NAME))
 
-	userDomainVal, err := userDomain.GetJSONValue()
+	userRepository := converter.ConvertDomainToEntity(userDomain)
+
+	result, err := collection.InsertOne(context.Background(), userRepository)
 	if err != nil {
 		return nil, rest_err.NewInternalServerError(err.Error())
 	}
 
-	result, err := collection.InsertOne(context.Background(), userDomainVal)
-	if err != nil {
-		return nil, rest_err.NewInternalServerError(err.Error())
-	}
+	userRepository.ID = result.InsertedID.(bson.ObjectID)
 
-	userDomain.SetID(result.InsertedID.(string))
-
-	return userDomain, nil
+	return converter.ConvertEntityToDomain(*userRepository), nil
 }
