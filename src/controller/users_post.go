@@ -38,11 +38,15 @@ func (uc *userControllerInterface) PostUser(c *gin.Context) {
 
 	domainResult, err := uc.service.CreateUser(domain)
 	if err != nil {
-		logger.Error("error trying to validate POST /users request", err, journeyTag)
+		logger.Error("error trying to call CreateUser service", err, journeyTag)
 		c.JSON(err.Code, err)
 		return
 	}
 
-	logger.Info("user 000-000-000 created successfully", journeyTag)
+	logger.Info(
+		"CreateUser controller executed successfully",
+		zap.String("userID", domain.GetID()),
+		journeyTag,
+	)
 	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domainResult))
 }

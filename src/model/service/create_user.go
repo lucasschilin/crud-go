@@ -10,14 +10,21 @@ import (
 func (ud *userDomainService) CreateUser(
 	userDomain model.UserDomainInterface,
 ) (model.UserDomainInterface, *rest_err.RestErr) {
-	logger.Info("Init createUser() model", zap.String("journey", "create-user"))
+	journeyTag := zap.String("journey", "create-user")
+	logger.Info("Init createUser model", journeyTag)
 
 	userDomain.EncryptPassword()
 
 	userDomainRepository, err := ud.userRepository.CreateUser(userDomain)
 	if err != nil {
+		logger.Error("Error trying to call repository", err, journeyTag)
 		return nil, err
 	}
 
+	logger.Info(
+		"CreateUser controller executed successfully",
+		zap.String("userID", userDomainRepository.GetID()),
+		journeyTag,
+	)
 	return userDomainRepository, nil
 }

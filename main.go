@@ -9,10 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/lucasschilin/crud-go/src/configuration/database/mongodb"
-	"github.com/lucasschilin/crud-go/src/controller"
 	"github.com/lucasschilin/crud-go/src/controller/routes"
-	"github.com/lucasschilin/crud-go/src/model/repository"
-	"github.com/lucasschilin/crud-go/src/model/service"
 )
 
 const (
@@ -31,9 +28,7 @@ func main() {
 		log.Fatalf("error to connect to database: %v", err)
 	}
 
-	userRepository := repository.NewUserRepository(database)
-	userService := service.NewUserDomainService(userRepository)
-	userController := controller.NewUserControllerInterface(userService)
+	userController := initDependencies(database)
 
 	gin.SetMode(os.Getenv(GIN_MODE))
 	router := gin.Default()
