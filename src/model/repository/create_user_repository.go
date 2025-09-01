@@ -12,10 +12,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	COLLECTION_NAME = "DATABASE_USER_COLLECTION_NAME"
-)
-
 func (ur *userRepository) CreateUser(
 	userDomain model.UserDomainInterface,
 ) (model.UserDomainInterface, *rest_err.RestErr) {
@@ -36,7 +32,7 @@ func (ur *userRepository) CreateUser(
 	userRepository.ID = result.InsertedID.(bson.ObjectID)
 
 	logger.Info(
-		"CreateUser controller executed successfully",
+		"CreateUser repository executed successfully",
 		zap.String("userID", userRepository.ID.Hex()),
 		journeyTag,
 	)
